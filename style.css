@@ -1,0 +1,436 @@
+/* ============================================================
+   FONT & BASE
+   ============================================================ */
+body {
+  font-family: "Poppins", sans-serif;
+}
+
+.font-display {
+  font-family: "Orbitron", "Poppins", sans-serif;
+}
+
+/* Cursor rõ ràng trên mọi phần tử bấm được */
+button,
+[role="button"] {
+  cursor: pointer;
+}
+button:disabled {
+  cursor: not-allowed;
+}
+
+/* Focus rõ ràng khi điều hướng bằng bàn phím (accessibility) */
+button:focus-visible,
+input:focus-visible,
+a:focus-visible {
+  outline: 2px solid #22d3ee;
+  outline-offset: 2px;
+}
+
+/* Chữ/badge không bị vỡ layout khi tràn */
+.rounded-lg,
+.rounded-full {
+  word-break: break-word;
+}
+
+/* Tôn trọng lựa chọn giảm hiệu ứng chuyển động của người dùng */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* Chặn bôi đen/chọn chữ trong toàn bộ game */
+html,
+body {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+/* Vùng chạm không bị double-tap zoom trên di động */
+button,
+.upgrade-button,
+.skill-node,
+#click-button {
+  touch-action: manipulation;
+}
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+#click-button:active {
+  animation: pulse 0.3s ease-in-out;
+}
+
+.animate-level-up {
+  animation: levelUp 2s ease-in-out;
+}
+@keyframes levelUp {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.5);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.animate-click {
+  animation: click 0.1s ease-in-out;
+}
+@keyframes click {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.95);
+  }
+}
+
+.golden-gift-pulse {
+  animation: goldenPulse 0.6s ease-in-out infinite;
+}
+@keyframes goldenPulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+}
+
+.transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+/* ============================================================
+   LAYOUT HELPERS
+   ============================================================ */
+.achieve {
+  max-height: 120px;
+  overflow: overlay;
+}
+
+#upgrades-list:not(.show-all) .opacity-50 {
+  display: none;
+}
+
+.upgrade-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.upgrade-button:not(:disabled):hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* Đường nối dọc giữa các node trong 1 nhánh Cây Kỹ Năng, gợi cảm giác "cây" */
+.skill-branch > .skill-node:not(:last-child) {
+  position: relative;
+}
+.skill-branch > .skill-node:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -10px;
+  width: 2px;
+  height: 10px;
+  background: #d1d5db;
+  transform: translateX(-50%);
+}
+
+/* Chấm thông báo "có việc cần làm" trên tab (nhiệm vụ xong, mua được node...) */
+.tab-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background: #f43f5e;
+  box-shadow: 0 0 6px #f43f5e;
+}
+
+/* Thanh tab trong modal - cuộn ngang mượt trên màn hình hẹp thay vì vỡ dòng */
+#skilltree-modal .tab-bar {
+  overflow-x: auto;
+  flex-wrap: nowrap;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+#skilltree-modal .tab-bar button {
+  flex: 0 0 auto;
+  position: relative;
+  white-space: nowrap;
+}
+
+/* ============================================================
+   DARK CYBERPUNK THEME (mặc định cho người chơi mới)
+   ============================================================ */
+.dark {
+  --cy-bg-1: #05070d;
+  --cy-bg-2: #0b1120;
+  --cy-cyan: #22d3ee;
+  --cy-magenta: #e879f9;
+  --cy-text: #e5e7eb;
+  --cy-text-dim: #94a3b8;
+  --cy-card: rgba(15, 23, 42, 0.72);
+  --cy-card-border: rgba(34, 211, 238, 0.18);
+
+  background: radial-gradient(circle at 15% 0%, #12213a 0%, transparent 45%),
+    radial-gradient(circle at 85% 15%, #2a123a 0%, transparent 40%),
+    linear-gradient(180deg, var(--cy-bg-1), var(--cy-bg-2)) !important;
+  background-attachment: fixed;
+  color: var(--cy-text);
+}
+
+/* Lưới nền kiểu cyberpunk, mờ nhẹ phía sau toàn bộ trang */
+.dark {
+  background-image: radial-gradient(circle at 15% 0%, #12213a 0%, transparent 45%),
+    radial-gradient(circle at 85% 15%, #2a123a 0%, transparent 40%),
+    linear-gradient(180deg, var(--cy-bg-1), var(--cy-bg-2)),
+    linear-gradient(rgba(34, 211, 238, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34, 211, 238, 0.05) 1px, transparent 1px);
+  background-size: auto, auto, auto, 40px 40px, 40px 40px;
+}
+
+.dark.bg-gradient-to-br {
+  background: transparent !important;
+  background-image: none !important;
+}
+
+/* Card/panel kính mờ phát sáng nhẹ - thay cho nền trắng phẳng */
+.dark .bg-white {
+  background-color: var(--cy-card) !important;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--cy-card-border);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+  color: var(--cy-text);
+}
+
+.dark .bg-gray-50,
+.dark .bg-gray-100 {
+  background-color: rgba(30, 41, 59, 0.6) !important;
+  border-color: rgba(148, 163, 184, 0.12);
+}
+.dark .bg-gray-200 {
+  background-color: rgba(51, 65, 85, 0.7) !important;
+}
+.dark .bg-gray-300 {
+  background-color: rgba(71, 85, 105, 0.8) !important;
+}
+.dark .bg-gray-400 {
+  background-color: rgba(100, 116, 139, 0.8) !important;
+}
+
+/* Card màu nhạt (-50) của từng khu (Gem Shop, Crit Shop, quà, thành tựu...) -> bản tối tương ứng */
+.dark .bg-blue-50 {
+  background-color: rgba(30, 58, 138, 0.25) !important;
+}
+.dark .bg-emerald-50 {
+  background-color: rgba(6, 78, 59, 0.3) !important;
+}
+.dark .bg-green-50 {
+  background-color: rgba(20, 83, 45, 0.3) !important;
+}
+.dark .bg-orange-50 {
+  background-color: rgba(124, 45, 18, 0.3) !important;
+}
+.dark .bg-pink-50 {
+  background-color: rgba(131, 24, 67, 0.3) !important;
+}
+.dark .bg-purple-50 {
+  background-color: rgba(88, 28, 135, 0.3) !important;
+}
+.dark .bg-red-50 {
+  background-color: rgba(127, 29, 29, 0.3) !important;
+}
+.dark .bg-yellow-50 {
+  background-color: rgba(113, 63, 18, 0.3) !important;
+}
+
+/* Chữ */
+.dark .text-gray-400 {
+  color: #64748b !important;
+}
+.dark .text-gray-500 {
+  color: #94a3b8 !important;
+}
+.dark .text-gray-600 {
+  color: #cbd5e1 !important;
+}
+.dark .text-gray-700 {
+  color: #e2e8f0 !important;
+}
+.dark .text-gray-800 {
+  color: #f1f5f9 !important;
+}
+
+/* Viền */
+.dark .border-gray-100,
+.dark .border-gray-200,
+.dark .border-gray-300,
+.dark .border-gray-400 {
+  border-color: rgba(148, 163, 184, 0.18) !important;
+}
+
+/* Viền màu theo bậc hiếm/khu vực -> phát sáng neon nhẹ thay vì viền pastel */
+.dark .border-blue-300,
+.dark .border-blue-400 {
+  border-color: rgba(96, 165, 250, 0.5) !important;
+  box-shadow: 0 0 8px rgba(96, 165, 250, 0.15);
+}
+.dark .border-emerald-200,
+.dark .border-emerald-400,
+.dark .border-green-300,
+.dark .border-green-400 {
+  border-color: rgba(52, 211, 153, 0.5) !important;
+  box-shadow: 0 0 8px rgba(52, 211, 153, 0.15);
+}
+.dark .border-orange-300 {
+  border-color: rgba(251, 146, 60, 0.5) !important;
+  box-shadow: 0 0 8px rgba(251, 146, 60, 0.15);
+}
+.dark .border-purple-300 {
+  border-color: rgba(216, 180, 254, 0.5) !important;
+  box-shadow: 0 0 8px rgba(216, 180, 254, 0.15);
+}
+.dark .border-red-400 {
+  border-color: rgba(248, 113, 113, 0.5) !important;
+  box-shadow: 0 0 8px rgba(248, 113, 113, 0.15);
+}
+.dark .border-yellow-300,
+.dark .border-yellow-400 {
+  border-color: rgba(250, 204, 21, 0.55) !important;
+  box-shadow: 0 0 8px rgba(250, 204, 21, 0.18);
+}
+
+/* Nút bấm chính - thêm phát sáng neon theo màu, chữ giữ trắng để tương phản tốt */
+.dark button.bg-blue-500,
+.dark .bg-blue-500 {
+  box-shadow: 0 0 14px rgba(59, 130, 246, 0.45);
+}
+.dark button.bg-emerald-500,
+.dark .bg-emerald-500 {
+  box-shadow: 0 0 14px rgba(16, 185, 129, 0.45);
+}
+.dark button.bg-pink-500,
+.dark .bg-pink-500 {
+  box-shadow: 0 0 14px rgba(236, 72, 153, 0.45);
+}
+.dark button.bg-orange-500,
+.dark .bg-orange-500 {
+  box-shadow: 0 0 14px rgba(249, 115, 22, 0.45);
+}
+.dark button.bg-red-500,
+.dark .bg-red-500 {
+  box-shadow: 0 0 14px rgba(239, 68, 68, 0.45);
+}
+.dark button.bg-yellow-500,
+.dark .bg-yellow-500,
+.dark button.bg-yellow-600,
+.dark .bg-yellow-600 {
+  box-shadow: 0 0 14px rgba(234, 179, 8, 0.45);
+}
+
+.dark .btn-close {
+  background: #ffffff17;
+}
+
+.dark #open-settings,
+.dark #open-skilltree {
+  box-shadow: 0 0 18px rgba(34, 211, 238, 0.35);
+}
+
+/* Tiêu đề chính dùng font hiển thị + phát sáng nhẹ cho không khí cyberpunk */
+.dark h1 {
+  text-shadow: 0 0 18px rgba(34, 211, 238, 0.5);
+}
+
+/* ============================================================
+   RESPONSIVE / MOBILE
+   ============================================================ */
+@media (max-width: 640px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  #click-button {
+    font-size: 1.25rem;
+    padding: 1rem;
+  }
+
+  .upgrade-button {
+    width: 100%;
+  }
+
+  /* Thanh máu Boss thu gọn trên màn hình nhỏ, tránh tràn ngang */
+  #boss-bar .container {
+    gap: 0.5rem;
+    font-size: 0.75rem;
+  }
+  #boss-name {
+    max-width: 90px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
+    vertical-align: bottom;
+  }
+
+  /* Nút nổi Cây Kỹ Năng/Cài Đặt thu nhỏ bớt để không chiếm quá nhiều diện tích */
+  #open-skilltree,
+  #open-settings {
+    font-size: 0.8rem;
+    padding: 0.5rem 0.75rem;
+  }
+}
+
+/* ============================================================
+   SCROLLBAR
+   ============================================================ */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #718096;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(34, 211, 238, 0.3);
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(34, 211, 238, 0.5);
+}
