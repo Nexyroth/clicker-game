@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Nexyroth Clicker</title>
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <style>
+        :root {
+            --bg-1: #05070d;
+            --bg-2: #0b1120;
+            --cyan: #22d3ee;
+            --magenta: #e879f9;
+            --text: #e5e7eb;
+            --text-dim: #94a3b8;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            padding: 24px;
+            background: linear-gradient(180deg, var(--bg-1), var(--bg-2));
+            color: var(--text);
+            font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+            text-align: center;
+        }
+        h1 {
+            margin: 0;
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            background: linear-gradient(90deg, var(--cyan), var(--magenta));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .spinner {
+            width: 42px;
+            height: 42px;
+            border: 3px solid rgba(34, 211, 238, 0.2);
+            border-top-color: var(--cyan);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @media (prefers-reduced-motion: reduce) {
+            .spinner { animation-duration: 3s; }
+        }
+        #status { color: var(--text-dim); font-size: 14px; margin: 0; min-height: 20px; }
+        #manual { display: none; flex-direction: column; gap: 10px; width: 100%; max-width: 260px; }
+        button {
+            padding: 12px 18px;
+            border: 1px solid rgba(34, 211, 238, 0.4);
+            border-radius: 10px;
+            background: rgba(15, 23, 42, 0.8);
+            color: var(--text);
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        button:active { transform: scale(0.97); }
+    </style>
+</head>
+<body>
+    <div class="spinner" id="spinner"></div>
+    <h1>NEXYROTH CLICKER</h1>
+    <p id="status">Đang kiểm tra kết nối...</p>
+
+    <div id="manual">
+        <button id="btn-online">🌐 Thử tải bản mới nhất</button>
+        <button id="btn-offline">📴 Chơi Offline ngay</button>
+    </div>
+
+    <script>
+        // Launcher cho bản Android (Capacitor). Chạy trên web thường thì file này KHÔNG được dùng -
+        // GitHub Pages vào thẳng game.html qua index.html ở thư mục gốc repo.
+        var REMOTE_GAME_URL = "https://nexyroth.github.io/clicker-game/www/game.html";
+        var LOCAL_GAME_URL = "game.html";
+        var PING_TIMEOUT_MS = 3000;
+
+        var statusEl = document.getElementById("status");
+        var spinnerEl = document.getElementById("spinner");
+        var manualEl = document.getElementById("manual");
+
+        function goOffline(reason) {
+            statusEl.textContent = reason + " — đang mở bản Offline...";
+            window.location.replace(LOCAL_GAME_URL);
+        }
+
+        function goOnline() {
+            statusEl.textContent = "Đã kết nối — đang tải bản mới nhất...";
+            window.location.replace(REMOTE_GAME_URL);
+        }
+
+        // Người chơi tự chọn khi kiểm tra thất bại nhưng họ vẫn muốn thử lại
+        function showManualChoice() {
+            spinnerEl.style.display = "none";
+            manualEl.style.display = "flex";
+        }
+
+        // fetch với timeout thủ công qua AbortController - fetch KHÔNG có option timeout sẵn,
+        // thiếu cái này thì mạng chập chờn sẽ treo launcher vô thời hạn.
+        function pingRemote() {
+            var controller = new AbortController();
+            var timer = setTimeout(function () { controller.abort(); }, PING_TIMEOUT_MS);
+
+            // cache: "no-store" để không ăn phải kết quả cache cũ khi thực tế đã mất mạng
+            return fetch(REMOTE_GAME_URL, {
+                method: "GET",
+                mode: "no-cors",
+                cache: "no-store",
+                signal: controller.signal
+            }).then(function () {
+                clearTimeout(timer);
+                return true;
+            }).catch(function () {
+                clearTimeout(timer);
+                return false;
+            });
+        }
+
+        function startCheck() {
+            spinnerEl.style.display = "block";
+            manualEl.style.display = "none";
+            statusEl.textContent = "Đang kiểm tra kết nối...";
+
+            if (navigator.onLine === false) {
+                goOffline("Không có mạng");
+                return;
+            }
+
+            pingRemote().then(function (ok) {
+                if (ok) {
+                    goOnline();
+                } else {
+                    statusEl.textContent = "Không kết nối được máy chủ.";
+                    showManualChoice();
+                    // Tự chuyển sang Offline sau 2 giây nếu người chơi không bấm gì
+                    setTimeout(function () {
+                        if (manualEl.style.display === "flex") goOffline("Hết thời gian chờ");
+                    }, 2000);
+                }
+            });
+        }
+
+        document.getElementById("btn-online").addEventListener("click", startCheck);
+        document.getElementById("btn-offline").addEventListener("click", function () {
+            goOffline("Bạn đã chọn chơi Offline");
+        });
+
+        startCheck();
+    </script>
+</body>
+</html>

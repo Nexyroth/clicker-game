@@ -1,0 +1,22 @@
+{
+  "name": "nexyroth-clicker",
+  "version": "8.2.0",
+  "description": "Nexyroth Clicker RPG - game Clicker/Idle thuần HTML5 + CSS3 + Vanilla JavaScript (ES6 Modules), đóng gói Android qua Capacitor",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "cap:add": "cap add android",
+    "cap:sync": "cap sync android",
+    "cap:open": "cap open android",
+    "cap:run": "cap run android",
+    "assets:generate": "capacitor-assets generate --android"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6.1.2",
+    "@capacitor/core": "^6.1.2"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.1.2",
+    "@capacitor/assets": "^3.0.5"
+  }
+}

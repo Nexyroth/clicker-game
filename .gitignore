@@ -1,0 +1,33 @@
+# --- Capacitor / Android build (KHÔNG commit, tự sinh lại bằng `npx cap add android`) ---
+/android/
+/ios/
+/dist/
+/build/
+
+# --- Node ---
+/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# --- Gradle / Android Studio (phòng khi thư mục android/ bị commit nhầm trước đó) ---
+*.apk
+*.aab
+*.keystore
+*.jks
+local.properties
+.gradle/
+captures/
+
+# --- Editor / OS ---
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# --- File tạm ---
+*.log
+*.tmp
+*.zip

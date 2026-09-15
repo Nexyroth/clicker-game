@@ -1,0 +1,13 @@
+{
+  "appId": "com.nexyroth.clicker",
+  "appName": "Nexyroth Clicker",
+  "webDir": "www",
+  "android": {
+    "allowMixedContent": false,
+    "backgroundColor": "#05070d"
+  },
+  "server": {
+    "androidScheme": "https",
+    "cleartext": false
+  }
+}
